@@ -6,24 +6,24 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { AdminsService } from './admins.service';
+import { Admin, AdminsService } from './admins.service';
 
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminServices: AdminsService) {}
 
   @Get()
-  getAllAdmins() {
+  getAllAdmins(): Admin[] {
     return this.adminServices.finAll();
   }
 
   @Get(':id')
-  getAdminById(@Param('id', ParseIntPipe) id: number) {
+  getAdminById(@Param('id', ParseIntPipe) id: number): Admin {
     return this.adminServices.findOneById(id);
   }
 
   @Post()
-  createAdmin(@Body() data) {
+  createAdmin(@Body() data): string {
     return this.adminServices.createAdmin(data);
   }
 }

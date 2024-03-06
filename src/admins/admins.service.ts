@@ -4,6 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+export type Admin = {
+  id: number;
+  name: string;
+  lastname: string;
+  email: string;
+};
+
 @Injectable()
 export class AdminsService {
   private admins = [
@@ -27,17 +34,17 @@ export class AdminsService {
     },
   ];
 
-  finAll() {
+  finAll(): Admin[] {
     return this.admins;
   }
 
-  findOneById(id: number) {
+  findOneById(id: number): Admin {
     const admin = this.admins.find((admin) => admin.id === id);
     if (!admin) throw new NotFoundException(`Admin with id: ${id} not found`);
     return admin;
   }
 
-  createAdmin(adminData: any) {
+  createAdmin(adminData: Admin): string {
     if (!adminData) throw new BadRequestException('Datos invalidos');
     const newAdmin = {
       id: this.admins.length + 1,
