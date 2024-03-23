@@ -1,17 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type AdminDocument = Admin & Document;
-
 @Schema()
-export class Admin {
-  @Prop()
+export class Admin extends Document {
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+  })
   username: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
   password: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
   role: string;
 }
 

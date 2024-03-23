@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
+import { CreateAdminDto } from './dto/create-admin.dto';
 
 @Controller('admins')
 export class AdminsController {
@@ -18,12 +20,25 @@ export class AdminsController {
   }
 
   @Get(':id')
-  getAdminById(@Param('id', ParseIntPipe) id: number) {
-    return this.adminServices.findOneById(id);
+  async getAdminById(@Param('id') id: string) {
+    return await this.adminServices.findOneById(id);
   }
 
   @Post()
-  createAdmin(@Body() data): string {
-    return this.adminServices.createAdmin(data);
+  async createAdmin(@Body() adminData: CreateAdminDto) {
+    return await this.adminServices.create(adminData);
+  }
+
+  @Patch(':id')
+  async updateAdmin(
+    @Param('id') id: string,
+    @Body() adminData: Partial<CreateAdminDto>,
+  ) {
+    return await this.adminServices.update(id, adminData);
+  }
+
+  @Delete(':id')
+  async deleteAdmin(@Param('id') id: string) {
+    return await this.adminServices.delete(id);
   }
 }
