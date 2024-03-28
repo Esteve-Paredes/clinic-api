@@ -1,4 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Admin } from './entity/admins.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -22,9 +28,16 @@ export class AdminsService {
   async findOneById(id: string): Promise<Admin | null> {
     try {
       const adminId = await this.adminModel.findById(id);
+      if (!adminId) throw new NotFoundException('id no encontrado');
       return adminId;
     } catch (error) {
-      throw new InternalServerErrorException('Error al encontrar un admin');
+      if (error instanceof BadRequestException)
+        throw new BadRequestException(error.message);
+      if (error instanceof UnauthorizedException)
+        throw new UnauthorizedException(error.message);
+      if (error instanceof NotFoundException)
+        throw new NotFoundException(error.message);
+      throw new InternalServerErrorException(error);
     }
   }
 
